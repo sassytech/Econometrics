@@ -1,0 +1,263 @@
+# Econometrics
+Company_A=read.csv("MUTHOOTFIN.NS.csv")
+Company_B=read.csv("BPCL.NS.csv")
+Company_C=read.csv("LTTS.NS.csv")
+Company_D=read.csv("CANBK.NS.csv")
+NSE=read.csv("NSE.csv")
+#structure of the dataset
+str(Company_A)
+str(Company_B)
+str(Company_C)
+str(Company_D)
+str(NSE)
+# converting  character date to date
+Company_A$Date=as.Date(Company_A$Date,format="%Y-%m-%d")
+Company_B$Date=as.Date(Company_B$Date,format="%Y-%m-%d")
+Company_C$Date=as.Date(Company_C$Date,format="%Y-%m-%d")
+Company_D$Date=as.Date(Company_D$Date,format="%Y-%m-%d")
+NSE$Date=as.Date(NSE$Date,format="%Y-%m-%d")
+str(Company_A)
+str(Company_B)
+str(Company_C)
+str(Company_D)
+str(NSE)
+nrow(Company_A)
+nrow(Company_B)
+nrow(Company_C)
+nrow(Company_D)
+nrow(NSE)
+#Daily Log Return
+Daily_log_Return_1=diff(log(Company_A$Adj.Close))
+Daily_log_Return_1
+Daily_log_Return_2=diff(log(Company_B$Adj.Close))
+Daily_log_Return_2
+Daily_log_Return_3=diff(log(Company_C$Adj.Close))
+Daily_log_Return_3
+Daily_log_Return_4=diff(log(Company_D$Adj.Close))
+Daily_log_Return_4
+Daily_log_Return_5=diff(log(NSE$Adj.Close))
+Daily_log_Return_5
+# mean of Return
+summary(Daily_log_Return_1)
+mean1=-0.001395 # Daily Return
+Annualised_mean_of_DLReturn1=(mean1*269)
+Annualised_mean_of_DLReturn1
+summary(Daily_log_Return_2)
+mean2=-0.0012550 # Daily Return
+Annualised_Return2=(mean2*269)
+Annualised_Return2
+summary(Daily_log_Return_3)
+mean3=-0.000349 # Daily Return
+Annualised_Return3=(mean3*269)
+Annualised_Return3
+summary(Daily_log_Return_4)
+mean4=0.001210 # Daily Return
+Annualised_Return4=(mean4*269)
+Annualised_Return4
+summary(Daily_log_Return_5)
+mean5=-5.684e-05 # Daily Return
+Annualised_Return5=(mean5*269)
+Annualised_Return5
+#risk
+daily_sd_CompanyA=sd(Daily_log_Return_1)
+daily_sd_CompanyA
+Annualised_sd_Company_A=daily_sd_CompanyA*sqrt(269)
+Annualised_sd_Company_A
+
+daily_sd_CompanyB=sd(Daily_log_Return_2)
+daily_sd_CompanyB
+Annualised_sd_Company_B=daily_sd_CompanyB*sqrt(269)
+Annualised_sd_Company_B
+
+daily_sd_CompanyC=sd(Daily_log_Return_3)
+daily_sd_CompanyC
+Annualised_sd_Company_C=daily_sd_CompanyC*sqrt(269)
+Annualised_sd_Company_C
+
+daily_sd_CompanyD=sd(Daily_log_Return_4)
+daily_sd_CompanyD
+Annualised_sd_Company_D=daily_sd_CompanyD*sqrt(269)
+Annualised_sd_Company_D
+
+daily_sd_NSE=sd(Daily_log_Return_5)
+daily_sd_NSE
+Annualised_sd_NSE=daily_sd_NSE*sqrt(269)
+Annualised_sd_NSE
+
+# calculate beta
+#Company a
+Company_A_Regression=lm(Daily_log_Return_1~Daily_log_Return_5)
+Company_A_Regression
+summary(Company_A_Regression)
+
+Company_A_Beta=coefficients(summary(Company_A_Regression))[2,1]
+Company_A_Beta
+#Company B
+Company_B_Regression=lm(Daily_log_Return_2~Daily_log_Return_5)
+Company_B_Regression
+summary(Company_B_Regression)
+Company_B_Beta=coefficients(summary(Company_B_Regression))[2,1]
+Company_B_Beta
+
+# Company C
+Company_C_Regression=lm(Daily_log_Return_3~Daily_log_Return_5)
+Company_C_Regression
+summary(Company_C_Regression)
+
+Company_C_Beta=coefficients(summary(Company_C_Regression))[2,1]
+Company_C_Beta
+
+#Company D
+Company_D_Regression=lm(Daily_log_Return_1~Daily_log_Return_5)
+Company_D_Regression
+summary(Company_D_Regression)
+
+Company_D_Beta=coefficients(summary(Company_D_Regression))[2,1]
+Company_D_Beta
+
+#NSE
+NSE_Beta=1
+
+# Calculating E(Rs) # Expected return of the security
+RF=0.0740
+# Company A  
+RM=Annualised_Return5
+E1=RF+(Company_A_Beta*(RM-RF))
+E1
+# Company B  
+E2=RF+(Company_B_Beta*(RM-RF))
+E2
+# Company C  
+E3=RF+(Company_C_Beta*(RM-RF))
+E3
+# Company D  
+E4=RF+(Company_D_Beta*(RM-RF))
+E4
+# NSE
+E5=RF+(NSE_Beta*(RM-RF))
+E5
+
+# Sharpe Ratio
+# Rs=annualised mean of the particular company
+# sigma s = annualise sd of the particular company
+# Company 1
+RS=mean1
+sigmaS=Annualised_sd_Company_A
+Sharp_Ratio_Company_A=(RS-RF)/sigmaS
+Sharp_Ratio_Company_A
+# Company 2
+RS=mean2
+sigmaS=Annualised_sd_Company_B
+Sharp_Ratio_Company_B=(RS-RF)/sigmaS
+Sharp_Ratio_Company_B
+# Company 3
+RS=mean3
+sigmaS=Annualised_sd_Company_C
+Sharp_Ratio_Company_C=(RS-RF)/sigmaS
+Sharp_Ratio_Company_C
+# Company 4
+RS=mean4
+sigmaS=Annualised_sd_Company_D
+Sharp_Ratio_Company_D=(RS-RF)/sigmaS
+Sharp_Ratio_Company_D
+# Company 5
+RS=mean5
+sigmaS=Annualised_sd_NSE
+Sharp_Ratio_NSE=(RS-RF)/sigmaS
+Sharp_Ratio_NSE
+
+# Treynor Ratio
+# Rs=annualised mean of the particular company
+# Beta s = beta of the particular company
+# Company 1
+RS1=mean1
+BetaS1=Company_A_Beta
+Treynor_Ratio_Company_A=(RS-RF)/BetaS1
+Treynor_Ratio_Company_A
+# Company 2
+RS2=mean2
+BetaS2=Company_B_Beta
+Treynor_Ratio_Company_B=(RS-RF)/BetaS2
+Treynor_Ratio_Company_B
+# Company 3
+RS3=mean3
+BetaS3=Company_C_Beta
+Treynor_Ratio_Company_C=(RS-RF)/BetaS3
+Treynor_Ratio_Company_C
+# Company 4
+RS4=mean4
+BetaS4=Company_D_Beta
+Treynor_Ratio_Company_D=(RS-RF)/BetaS4
+Treynor_Ratio_Company_D
+# NSE
+RS5=mean5
+BetaS5=NSE_Beta
+Treynor_Ratio_NSE=(RS-RF)/BetaS5
+Treynor_Ratio_NSE
+
+# Jensen's Ratio
+# alpha=Rs-E(Rs)
+#Company A
+alpha1=RS1-E1
+alpha1
+#Company B
+alpha2=RS2-E2
+alpha2
+#Company C
+alpha3=RS3-E3
+alpha3
+#Company D
+alpha4=RS4-E4
+alpha4
+#NSE
+alpha5=RS5-E5
+alpha5
+# plotting (This scatter plot is the responsiveness of company
+#returns to market returns)
+# Company A
+plot(Daily_log_Return_5,Daily_log_Return_1,pch=20)
+abline(Company_A_Regression,col='red')
+# Company B
+plot(Daily_log_Return_5,Daily_log_Return_2,pch=20)
+abline(Company_B_Regression,col='red')
+# Company C
+plot(Daily_log_Return_5,Daily_log_Return_3,pch=20)
+abline(Company_C_Regression,col='red')
+
+# Company D
+plot(Daily_log_Return_5,Daily_log_Return_4,pch=20)
+abline(Company_D_Regression,col='red')
+#NSE
+
+
+# making a table
+# Company A
+Company_A_Col=c(mean1,Annualised_mean_of_DLReturn1,daily_sd_CompanyA,Annualised_sd_Company_A,
+                Company_A_Beta,E1)
+Company_B_Col=c(mean2,Annualised_Return2,daily_sd_CompanyB,Annualised_sd_Company_B,
+                Company_B_Beta,E2)
+Company_C_Col=c(mean3,Annualised_Return3,daily_sd_CompanyC,Annualised_sd_Company_C,
+                Company_C_Beta,E3)
+Company_D_Col=c(mean4,Annualised_Return4,daily_sd_CompanyD,Annualised_sd_Company_D,
+                Company_D_Beta,E4)
+NSE_Col=c(mean5,Annualised_Return5,daily_sd_NSE,Annualised_sd_NSE,
+          NSE_Beta,E5)
+Output_Table=data.frame(Company_A_Col,Company_B_Col,Company_C_Col,Company_D_Col,
+                        NSE_Col)
+colnames(Output_Table)=c("MuthootFin","BPCL","LTTS","CANBK","NSE S&P 500")
+rownames(Output_Table)=c("Daily_Return_Mean","Annualised_Return_Mean","SD_Daily_Returns",
+                         "Annualised_Sd_Returns","Beta","Expected Returns")
+View(Output_Table)
+# making ratio table
+# Company A
+Company_A_Col=c(Sharp_Ratio_Company_A,Treynor_Ratio_Company_A,alpha1)
+Company_B_Col=c(Sharp_Ratio_Company_B,Treynor_Ratio_Company_B,alpha2)
+Company_C_Col=c(Sharp_Ratio_Company_C,Treynor_Ratio_Company_C,alpha3)
+Company_D_Col=c(Sharp_Ratio_Company_D,Treynor_Ratio_Company_D,alpha4)
+NSE_Col=c(Sharp_Ratio_NSE,Treynor_Ratio_NSE,alpha5)
+Output_Table=data.frame(Company_A_Col,Company_B_Col,Company_C_Col,Company_D_Col,
+                        NSE_Col)
+colnames(Output_Table)=c("MuthootFin","BPCL","LTTS","CANBK","NSE S&P 500")
+rownames(Output_Table)=c("Sharpe Ratio","Treyner","Jensen's alpha")
+View(Output_Table)
+
