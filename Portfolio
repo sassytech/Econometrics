@@ -1,0 +1,97 @@
+# Econometrics
+Company_A=read.csv("SUNDARMFIN.NS.csv")
+Company_B=read.csv("GREAVESCOT.NS.csv")
+Company_C=read.csv("CLNINDIA.NS.csv")
+Company_D=read.csv("PETRONET.NS.csv")
+str(Company_A)
+str(Company_B)
+str(Company_C)
+str(Company_D)
+Company_A$Date=as.Date(Company_A$Date,format="%Y-%m-%d")
+Company_B$Date=as.Date(Company_B$Date,format="%Y-%m-%d")
+Company_C$Date=as.Date(Company_C$Date,format="%Y-%m-%d")
+Company_D$Date=as.Date(Company_D$Date,format="%Y-%m-%d")
+str(Company_A)
+str(Company_B)
+str(Company_C)
+str(Company_D)
+nrow(Company_A)
+nrow(Company_B)
+nrow(Company_C)
+nrow(Company_D)
+Daily_log_Return_1=diff(log(Company_A$Adj.Close)) 
+Daily_log_Return_1
+Daily_log_Return_2=diff(log(Company_B$Adj.Close)) 
+Daily_log_Return_2
+Daily_log_Return_3=diff(log(Company_C$Adj.Close)) 
+Daily_log_Return_3
+Daily_log_Return_4=diff(log(Company_D$Adj.Close)) 
+Daily_log_Return_4
+# Return
+summary(Daily_log_Return_1)
+mean1=-0.0003501 # daily mean return of company A
+Annualised_Return_Company_A=(mean1*250)
+Annualised_Return_Company_A
+summary(Daily_log_Return_2)
+mean2=0.0009191# daily return of company B
+Annualised_Return_Company_B=(mean2*250)
+Annualised_Return_Company_B
+summary(Daily_log_Return_3)
+mean3=-0.0010169 # Daily return of Company C 
+Annualised_Return_Company_C=(mean3*250)
+Annualised_Return_Company_C
+summary(Daily_log_Return_4)
+mean4=-5.900e-07 # Daily Return of Company D 
+Annualised_Return_Company_D=(mean4*269)
+Annualised_Return_Company_D
+
+
+
+
+#risk
+daily_sd_CompanyA=sd(Daily_log_Return_1)
+daily_sd_CompanyA
+Annualised_sd_Company_A=daily_sd_CompanyA*sqrt(250)
+Annualised_sd_Company_A
+
+daily_sd_CompanyB=sd(Daily_log_Return_2)
+daily_sd_CompanyB
+Annualised_sd_Company_B=daily_sd_CompanyB*sqrt(250)
+Annualised_sd_Company_B
+
+daily_sd_CompanyC=sd(Daily_log_Return_3)
+daily_sd_CompanyC
+Annualised_sd_Company_C=daily_sd_CompanyC*sqrt(250)
+Annualised_sd_Company_C
+
+daily_sd_CompanyD=sd(Daily_log_Return_4)
+daily_sd_CompanyD
+Annualised_sd_Company_D=daily_sd_CompanyD*sqrt(250)
+Annualised_sd_Company_D
+
+# Our Portifolio
+OurPortfolio=data.frame(Daily_log_Return_1,Daily_log_Return_2,Daily_log_Return_3,Daily_log_Return_4)
+colnames(OurPortfolio)=c('SUNDARMFIN','PETRONET','CLARIANT','GREAVES COTTON')
+pairs(OurPortfolio,labels=colnames(OurPortfolio),col=rainbow(3))
+VarCovarMatrix=as.matrix(cov(OurPortfolio),ncol=4)
+VarCovarMatrix
+PortfolioWeights=as.matrix(c(0.25,0.25,0.25,0.25),ncol=1)
+PortfolioVariance=(t(PortfolioWeights)%*%VarCovarMatrix)%*%PortfolioWeights
+# Portfolio Risk
+Portfoliorisk=sqrt(PortfolioVariance)
+Portfoliorisk
+Annualised_PortfolioRisk=Portfoliorisk*sqrt(250)
+Annualised_PortfolioRisk
+
+# Daily Portfolio Return
+Stock_Returns=as.matrix(c(mean1,mean2,mean3,mean4),ncol=1)
+portfolioreturns=(t(PortfolioWeights)%*%Stock_Returns)
+portfolioreturns
+
+# Aportfolioreturns=(t(PortfolioWeights)%*%Stock_Returns)
+Annualised_PortfolioReturn=portfolioreturns*250
+Annualised_PortfolioReturn
+#
+cor(Daily_log_Return_1,Daily_log_Return_2)
+# if it is not perfectly correalted the risk will reduce 
+
